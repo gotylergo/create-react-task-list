@@ -10,7 +10,7 @@ export class App extends Component {
       modalShows: false,
       taskList: [],
     }
-    
+
     this.toggleModal = e => {
       this.setState({
         modalShows: !(this.state.modalShows)
@@ -46,7 +46,10 @@ export class App extends Component {
     this.updateTaskList = (action, task) => {
       switch (action) {
         case 'create':
-          console.log('create hit');
+          if (this.state.taskList.some(i => i.name === task.name)) {
+            alert(`Task '${task.name}' already exists! Choose another task name or edit the existing task.`);
+            return;
+          }
           this.toggleModal();
           return this.setState((prevState) => ({
             taskList: [...prevState.taskList, task]
@@ -60,17 +63,6 @@ export class App extends Component {
           console.error('Task:', task);
       }
     }
-
-    // this.editTask = (action, item) => {
-    //   this.();
-    //   switch (action) {
-    //     case 'post': window.sessionStorage.setItem('taskList', ([item]));
-    //       break;
-    //     case 'delete': window.sessionStorage.setItem('taskList', ([item]));
-    //       break;
-    //     default: console.error(`Invalid action: '${action}'! \nSupply an action for item: '${item}'.`);
-    //   }
-    // }
   }
   componentDidMount() {
     this.syncStateFromSessionStorage();

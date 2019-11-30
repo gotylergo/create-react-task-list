@@ -10,7 +10,7 @@ export class TaskList extends Component {
   }
   render() {
     let Tasks = [];
-    if (this.props.taskList === null) {
+    if (this.props.taskList.length === 0) {
       Tasks = ["No tasks! :)"]
     }
     else {

@@ -8,29 +8,90 @@ export class App extends Component {
     super(props);
     this.state = {
       modalShows: false,
-      taskList: this.props.taskList,
+      taskList: [],
     }
+    
     this.toggleModal = e => {
       this.setState({
         modalShows: !(this.state.modalShows)
       });
     };
+
+    this.syncStateFromSessionStorage = () => {
+      let taskList = JSON.parse(window.sessionStorage.getItem('taskList'));
+      // Check if sessionStorage matches state
+      if (taskList !== this.state.taskList) {
+        // If task list in SessionStorage is not set, set it to be a blank array
+        if (taskList === null | taskList === undefined) {
+          let newTaskList = [];
+          sessionStorage.setItem('taskList', JSON.stringify(newTaskList));
+          return this.setState({
+            taskList: newTaskList,
+          });
+          // If task list exists in session storage, sync it to state
+        } else if (Array.isArray(taskList)) {
+          return this.setState({
+            taskList,
+          });
+        } else {
+          return console.error('Application error. Task list is not an array. taskList:', taskList);
+        }
+      }
+    }
+
+    this.syncStateToSessionStorage = () => {
+      sessionStorage.setItem('taskList', JSON.stringify(this.state.taskList));
+    }
+
+    this.updateTaskList = (action, task) => {
+      switch (action) {
+        case 'create':
+          console.log('create hit');
+          this.toggleModal();
+          return this.setState((prevState) => ({
+            taskList: [...prevState.taskList, task]
+          }))
+        case 'update':
+          return console.log('update hit');
+        case 'delete':
+          return console.log('delete hit');
+        default:
+          console.error('Invalid action set. Action:', action);
+          console.error('Task:', task);
+      }
+    }
+
+    // this.editTask = (action, item) => {
+    //   this.();
+    //   switch (action) {
+    //     case 'post': window.sessionStorage.setItem('taskList', ([item]));
+    //       break;
+    //     case 'delete': window.sessionStorage.setItem('taskList', ([item]));
+    //       break;
+    //     default: console.error(`Invalid action: '${action}'! \nSupply an action for item: '${item}'.`);
+    //   }
+    // }
+  }
+  componentDidMount() {
+    this.syncStateFromSessionStorage();
   }
   render() {
-    console.log(this.state.taskList);
     return (
       <div className="App">
         <header className="App-header">
           <h1>Task List</h1>
         </header>
         <main>
-          <TaskList taskList={this.props.taskList} />
+          <TaskList taskList={this.state.taskList} />
           <button onClick={e => { this.toggleModal(); }}>New Task</button>
-          <NewTaskModal modalShows={this.state.modalShows} toggleModal={this.toggleModal} />
+          <NewTaskModal modalShows={this.state.modalShows} toggleModal={this.toggleModal} updateTaskList={this.updateTaskList} />
         </main>
       </div>
     );
   };
+  componentWillUnmount() {
+    this.syncStateToSessionStorage();
+  }
 };
 
 export default App;

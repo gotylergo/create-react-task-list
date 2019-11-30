@@ -9,9 +9,15 @@ export class TaskList extends Component {
     }
   }
   render() {
-    const Tasks = this.state.tasks.map((task, index) =>
-      <Task key={index} task={task} />
-    )
+    let Tasks = [];
+    if (this.state.tasks.length === 0) {
+      Tasks = ["No tasks! :)"]
+    }
+    else {
+      Tasks = this.state.tasks.map((task, index) =>
+        <Task key={index} task={task} />
+      )
+    }
     return (
       <ul>
         {Tasks}

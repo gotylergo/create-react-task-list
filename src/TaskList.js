@@ -5,16 +5,16 @@ export class TaskList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tasks: ['Wash the dishes', 'Do the laundry', 'Sweep the floors'],
+      tasks: this.props.taskList,
     }
   }
   render() {
     let Tasks = [];
-    if (this.state.tasks.length === 0) {
+    if (this.props.taskList === null) {
       Tasks = ["No tasks! :)"]
     }
     else {
-      Tasks = this.state.tasks.map((task, index) =>
+      Tasks = this.props.taskList.map((task, index) =>
         <Task key={index} task={task} />
       )
     }

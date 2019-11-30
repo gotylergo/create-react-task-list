@@ -8,22 +8,23 @@ export class App extends Component {
     super(props);
     this.state = {
       modalShows: false,
+      taskList: this.props.taskList,
     }
     this.toggleModal = e => {
       this.setState({
         modalShows: !(this.state.modalShows)
       });
     };
-    // this.toggleModal = this.toggleModal.bind(this);
   }
   render() {
+    console.log(this.state.taskList);
     return (
       <div className="App">
         <header className="App-header">
           <h1>Task List</h1>
         </header>
         <main>
-          <TaskList />
+          <TaskList taskList={this.props.taskList} />
           <button onClick={e => { this.toggleModal(); }}>New Task</button>
           <NewTaskModal modalShows={this.state.modalShows} toggleModal={this.toggleModal} />
         </main>

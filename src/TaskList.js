@@ -15,7 +15,7 @@ export class TaskList extends Component {
     }
     else {
       Tasks = this.props.taskList.map((task, index) =>
-        <Task key={index} task={task} />
+        <Task key={index} task={task} toggleModal={this.props.toggleModal} />
       )
     }
     return (

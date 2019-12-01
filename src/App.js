@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 import './App.css';
 import { TaskList } from './TaskList';
-import { NewTaskModal } from './NewTaskModal';
+import { TaskModal } from './TaskModal';
 
 export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modalShows: false,
+      modalTaskName: '',
+      modalTaskPriority: 'High',
       taskList: [],
     }
 
-    this.toggleModal = e => {
+    this.toggleModal = () => {
       this.setState({
-        modalShows: !(this.state.modalShows)
+        modalShows: !(this.state.modalShows),
       });
     };
 
@@ -43,26 +45,49 @@ export class App extends Component {
       sessionStorage.setItem('taskList', JSON.stringify(this.state.taskList));
     }
 
-    this.updateTaskList = (action, task) => {
-      switch (action) {
-        case 'create':
-          if (this.state.taskList.some(i => i.name === task.name)) {
-            alert(`Task '${task.name}' already exists! Choose another task name or edit the existing task.`);
-            return;
-          }
-          this.toggleModal();
-          return this.setState((prevState) => ({
-            taskList: [...prevState.taskList, task]
-          }))
-        case 'update':
-          return console.log('update hit');
-        case 'delete':
-          return console.log('delete hit');
-        default:
-          console.error('Invalid action set. Action:', action);
-          console.error('Task:', task);
+    this.updateTaskList = () => {
+      // If task exists, update the task
+      if (this.state.taskList.some(i => i.name === this.state.modalTaskName)) {
+        let thisTaskIndex = this.state.taskList.findIndex(({name}) => name === this.state.modalTaskName);
+        let newList = [...this.state.taskList];
+        newList[thisTaskIndex] = {
+          name: this.state.modalTaskName,
+          priority: this.state.modalTaskPriority,
+        };
+        this.toggleModal();
+        return this.setState({
+          taskList: newList,
+        });
+      }
+      // If task does not exist, create it
+      else {
+        this.toggleModal();
+        let task = {
+          name: this.state.modalTaskName,
+          priority: this.state.modalTaskPriority,
+        }
+        return this.setState((prevState) => ({
+          taskList: [...prevState.taskList, task]
+        }))
       }
     }
+
+    this.setModalTaskName = (e) => {
+      this.setState({
+        modalTaskName: e.target.value,
+      })
+    }
+
+    this.setModalTaskName = this.setModalTaskName.bind(this);
+
+    this.setModalTaskPriority = (e) => {
+      this.setState({
+        modalTaskPriority: e.target.value,
+      })
+    }
+
+    this.setModalTaskPriority = this.setModalTaskPriority.bind(this);
+
   }
   componentDidMount() {
     this.syncStateFromSessionStorage();
@@ -74,14 +99,14 @@ export class App extends Component {
           <h1>Task List</h1>
         </header>
         <main>
-          <TaskList taskList={this.state.taskList} />
+          <TaskList taskList={this.state.taskList} toggleModal={this.toggleModal} />
           <button onClick={e => { this.toggleModal(); }}>New Task</button>
-          <NewTaskModal modalShows={this.state.modalShows} toggleModal={this.toggleModal} updateTaskList={this.updateTaskList} />
+          <TaskModal modalShows={this.state.modalShows} toggleModal={this.toggleModal} updateTaskList={this.updateTaskList} setModalTaskName={(e) => this.setModalTaskName(e)} setModalTaskPriority={(e) => this.setModalTaskPriority(e)} />
         </main>
       </div>
     );
   };
-  componentWillUnmount() {
+  componentDidUpdate() {
     this.syncStateToSessionStorage();
   }
 };

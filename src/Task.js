@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import './task.css';
 
 export class Task extends Component {
   render() {
     return (
-      <li>{this.props.task.name}  ({this.props.task.priority})</li>
+      <li><button className="button-link" onClick={this.props.toggleModal}>{this.props.task.name}</button>  ({this.props.task.priority})</li>
     )
   };
 };

@@ -6,8 +6,12 @@
   background: #fff;
   border: 1px solid #d3d3d3;
   border-radius: 5px;
-  height: 500px;
-  width: 500px;
+  height: 90%;
+  min-height: 300px;
+  max-height: 500px;
+  width: 90%;
+  min-width: 300px;
+  max-width: 500px;
   box-shadow: 2px 4px 4px grey;
 }
 
@@ -17,7 +21,7 @@
 }
 
 .form-group > * {
-  width: 90%;
+  width: 95%;
   margin: .5em 0;
 }
 

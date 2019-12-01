@@ -103,15 +103,11 @@ export class App extends Component {
       })
     }
 
-    this.deleteTask = this.deleteTask.bind(this);
-
     this.setcurrentTaskName = (e) => {
       this.setState({
         currentTaskName: e.target.value,
       })
     }
-
-    this.setcurrentTaskName = this.setcurrentTaskName.bind(this);
 
     this.setcurrentTaskPriority = (e) => {
       this.setState({
@@ -119,15 +115,11 @@ export class App extends Component {
       })
     }
 
-    this.setcurrentTaskPriority = this.setcurrentTaskPriority.bind(this);
-
     this.setcurrentTaskID = (e) => {
       this.setState({
         currentTaskID: e.target.value,
       })
     }
-
-    this.setcurrentTaskID = this.setcurrentTaskID.bind(this);
 
   }
   componentDidMount() {

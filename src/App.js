@@ -93,6 +93,18 @@ export class App extends Component {
       }
     }
 
+    this.deleteTask = (e) => {
+      let thisID = e.target.id.slice('4');
+      let thisTaskIndex = this.state.taskList.findIndex(({ ID }) => ID === thisID);
+      let newList = [...this.state.taskList];
+      newList.splice(thisTaskIndex, 1);
+      this.setState({
+        taskList: newList,
+      })
+    }
+
+    this.deleteTask = this.deleteTask.bind(this);
+
     this.setcurrentTaskName = (e) => {
       this.setState({
         currentTaskName: e.target.value,
@@ -128,7 +140,7 @@ export class App extends Component {
           <h1>Task List</h1>
         </header>
         <main>
-          <TaskList taskList={this.state.taskList} toggleModal={this.toggleModal} />
+          <TaskList taskList={this.state.taskList} toggleModal={this.toggleModal} deleteTask={e => this.deleteTask(e)}/>
           <button onClick={e => { this.toggleModal(e); }}>New Task</button>
           <TaskModal modalShows={this.state.modalShows} toggleModal={this.toggleModal} updateTaskList={this.updateTaskList} setcurrentTaskName={(e) => this.setcurrentTaskName(e)} setcurrentTaskPriority={(e) => this.setcurrentTaskPriority(e)} setcurrentTaskID={(e) => this.setcurrentTaskID(e)} currentTaskID={this.state.currentTaskID} currentTaskName={this.state.currentTaskName} currentTaskPriority={this.state.currentTaskPriority} />
         </main>

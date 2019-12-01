@@ -8,15 +8,32 @@ export class App extends Component {
     super(props);
     this.state = {
       modalShows: false,
-      modalTaskName: '',
-      modalTaskPriority: 'High',
+      currentTaskName: '',
+      currentTaskID: '',
+      currentTaskPriority: 'Medium',
       taskList: [],
     }
 
-    this.toggleModal = () => {
-      this.setState({
-        modalShows: !(this.state.modalShows),
-      });
+    this.toggleModal = (e) => {
+      if (e && e.target.className === "button-link") {
+        let currentTaskID = e.currentTarget.id;
+        let task = (this.state.taskList.filter(i => i.ID === currentTaskID))[0];
+        let currentTaskName = task.name;
+        let currentTaskPriority = task.priority;
+        this.setState({
+          modalShows: !(this.state.modalShows),
+          currentTaskID,
+          currentTaskName,
+          currentTaskPriority,
+        })
+      } else {
+        this.setState({
+          modalShows: !(this.state.modalShows),
+          currentTaskID: '',
+          currentTaskName: '',
+          currentTaskPriority: 'Medium',
+        });
+      }
     };
 
     this.syncStateFromSessionStorage = () => {
@@ -46,13 +63,16 @@ export class App extends Component {
     }
 
     this.updateTaskList = () => {
+      let uniqueId = Math.random().toString(36).substring(2) + Date.now().toString(36);
+
       // If task exists, update the task
-      if (this.state.taskList.some(i => i.name === this.state.modalTaskName)) {
-        let thisTaskIndex = this.state.taskList.findIndex(({name}) => name === this.state.modalTaskName);
+      if (this.state.taskList.some(i => i.ID === this.state.currentTaskID)) {
+        let thisTaskIndex = this.state.taskList.findIndex(({ ID }) => ID === this.state.currentTaskID);
         let newList = [...this.state.taskList];
         newList[thisTaskIndex] = {
-          name: this.state.modalTaskName,
-          priority: this.state.modalTaskPriority,
+          name: this.state.currentTaskName,
+          priority: this.state.currentTaskPriority,
+          ID: this.state.currentTaskID,
         };
         this.toggleModal();
         return this.setState({
@@ -63,8 +83,9 @@ export class App extends Component {
       else {
         this.toggleModal();
         let task = {
-          name: this.state.modalTaskName,
-          priority: this.state.modalTaskPriority,
+          name: this.state.currentTaskName,
+          priority: this.state.currentTaskPriority,
+          ID: uniqueId,
         }
         return this.setState((prevState) => ({
           taskList: [...prevState.taskList, task]
@@ -72,21 +93,29 @@ export class App extends Component {
       }
     }
 
-    this.setModalTaskName = (e) => {
+    this.setcurrentTaskName = (e) => {
       this.setState({
-        modalTaskName: e.target.value,
+        currentTaskName: e.target.value,
       })
     }
 
-    this.setModalTaskName = this.setModalTaskName.bind(this);
+    this.setcurrentTaskName = this.setcurrentTaskName.bind(this);
 
-    this.setModalTaskPriority = (e) => {
+    this.setcurrentTaskPriority = (e) => {
       this.setState({
-        modalTaskPriority: e.target.value,
+        currentTaskPriority: e.target.value,
       })
     }
 
-    this.setModalTaskPriority = this.setModalTaskPriority.bind(this);
+    this.setcurrentTaskPriority = this.setcurrentTaskPriority.bind(this);
+
+    this.setcurrentTaskID = (e) => {
+      this.setState({
+        currentTaskID: e.target.value,
+      })
+    }
+
+    this.setcurrentTaskID = this.setcurrentTaskID.bind(this);
 
   }
   componentDidMount() {
@@ -100,8 +129,8 @@ export class App extends Component {
         </header>
         <main>
           <TaskList taskList={this.state.taskList} toggleModal={this.toggleModal} />
-          <button onClick={e => { this.toggleModal(); }}>New Task</button>
-          <TaskModal modalShows={this.state.modalShows} toggleModal={this.toggleModal} updateTaskList={this.updateTaskList} setModalTaskName={(e) => this.setModalTaskName(e)} setModalTaskPriority={(e) => this.setModalTaskPriority(e)} />
+          <button onClick={e => { this.toggleModal(e); }}>New Task</button>
+          <TaskModal modalShows={this.state.modalShows} toggleModal={this.toggleModal} updateTaskList={this.updateTaskList} setcurrentTaskName={(e) => this.setcurrentTaskName(e)} setcurrentTaskPriority={(e) => this.setcurrentTaskPriority(e)} setcurrentTaskID={(e) => this.setcurrentTaskID(e)} currentTaskID={this.state.currentTaskID} currentTaskName={this.state.currentTaskName} currentTaskPriority={this.state.currentTaskPriority} />
         </main>
       </div>
     );

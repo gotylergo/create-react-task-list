@@ -11,3 +11,15 @@
 .button-link:hover {
   text-decoration: none;
 }
+
+.task-priority {
+  margin-left: .25em;
+}
+
+.task-priority::before {
+  content: "("
+}
+
+.task-priority::after {
+  content: ")"
+}

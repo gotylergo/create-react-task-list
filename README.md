@@ -1,6 +1,6 @@
 # React Task List
 
-Create, modify, and delete tasks in a list.
+Create, modify, delete, and sort tasks in a list.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

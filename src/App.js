@@ -103,6 +103,50 @@ export class App extends Component {
       })
     }
 
+    this.sortList = (order) => {
+      let sorted = this.state.taskList.slice(0);
+      function compare(a, b) {
+        let taskA = a.priority;
+        let taskB = b.priority;
+
+        switch (taskA) {
+          case 'High':
+            taskA = 0;
+            break;
+          case 'Medium':
+            taskA = 1;
+            break;
+          default:
+            taskA = 2;
+            break;
+        }
+
+        switch (taskB) {
+          case 'High':
+            taskB = 0;
+            break;
+          case 'Medium':
+            taskB = 1;
+            break;
+          default:
+            taskB = 2;
+            break;
+        }
+
+        let comparison = 0;
+        if (taskA > taskB) {
+          comparison = -1;
+        } else if (taskA < taskB) {
+          comparison = 1;
+        }
+        return comparison * order;
+      }
+      sorted = sorted.sort(compare);
+      this.setState({
+        taskList: sorted,
+      });
+    }
+
     this.setcurrentTaskName = (e) => {
       this.setState({
         currentTaskName: e.target.value,
@@ -132,7 +176,10 @@ export class App extends Component {
           <h1>Task List</h1>
         </header>
         <main>
-          <TaskList taskList={this.state.taskList} toggleModal={this.toggleModal} deleteTask={e => this.deleteTask(e)}/>
+          <div>
+            Sort: <button className="button-link" onClick={() => this.sortList(-1)}>High to Low</button> <button className="button-link" onClick={() => this.sortList(1)}>Low to High</button>
+          </div>
+          <TaskList taskList={this.state.taskList} toggleModal={this.toggleModal} deleteTask={e => this.deleteTask(e)} />
           <button onClick={e => { this.toggleModal(e); }}>New Task</button>
           <TaskModal modalShows={this.state.modalShows} toggleModal={this.toggleModal} updateTaskList={this.updateTaskList} setcurrentTaskName={(e) => this.setcurrentTaskName(e)} setcurrentTaskPriority={(e) => this.setcurrentTaskPriority(e)} setcurrentTaskID={(e) => this.setcurrentTaskID(e)} currentTaskID={this.state.currentTaskID} currentTaskName={this.state.currentTaskName} currentTaskPriority={this.state.currentTaskPriority} />
         </main>

@@ -176,6 +176,13 @@ export class App extends Component {
           <h1>Task List</h1>
         </header>
         <main>
+          <h2>Instructions</h2>
+          <ol>
+          <li>Add a task: Click the <strong>New Task</strong> button.</li>
+          <li>Edit a task: Click the on the task name.</li>
+          <li>Delete a task: Click <strong>Delete</strong> next to a task.</li>
+          <li>Sort the list: Click <strong>High to Low</strong> or <strong>Low to High</strong>.</li>
+          </ol>
           <div>
             Sort: <button className="button-link" onClick={() => this.sortList(-1)}>High to Low</button> <button className="button-link" onClick={() => this.sortList(1)}>Low to High</button>
           </div>
